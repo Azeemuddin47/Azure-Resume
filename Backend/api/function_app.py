@@ -4,14 +4,14 @@ import azure.functions as func
 from azure.cosmos import CosmosClient
 
 # Initialize CosmosClient with account endpoint and account key
-endpoint = ""
-key = ""
+endpoint = "YOUR ENDPOINT"
+key = "YOUR KEY"
 client = CosmosClient(endpoint, credential=key)
 
 # Specify the name of your database and container
-database_name = ""
-container_name = ""
-item_id = ""
+database_name = "DATABASE NAME"
+container_name = "CONTAINER NAME"
+item_id = "ID"
 
 database = client.get_database_client(database_name)
 container = database.get_container_client(container_name)
