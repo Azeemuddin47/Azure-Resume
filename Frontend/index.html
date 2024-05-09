@@ -5,12 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Azeemuddin: Resume</title>
   <link rel="stylesheet" href="./css/styles.css">
-  <script type="text/javascript" src="./count.js"></script>
 </head>
 <body>
 <!-- partial:index.partial.html -->
 <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700' rel='stylesheet' type='text/css'>
-
 <div class="container">
   <div class="header">
     <div class="full-name">
@@ -55,7 +53,27 @@
                 <li><a href="https://github.com/aeversme/resumestatic" target="_blank">GitHub repository</a> with Actions for CI/CD automation using the SAM CLI tool</li>
                 </ul>
             </div>
-            <div class="text">This is the dynamic page hit counter: you are visitor number <span id="count"></span>!</div>
+            <div class="text">This is the dynamic page hit counter: you are visitor number <span id='counter'></span>!</div>
+            <script>
+              window.addEventListener('DOMContentLoaded', (event) => {
+					    getVisitCount();
+				    });
+              const functionApi = ('http://localhost:7071/api/GetResumeCounter');
+
+              const getVisitCount = () =>{
+              let count = 30;
+              fetch(functionApi).then(response => {
+                return response.json()
+              }).then(response => {
+              console.log("Website called function API");
+              count = response.count;
+              document.getElementById('counter').innerText = count;
+              }).catch(function(error){
+                console.log(error);
+              });
+              return count;
+            }
+            </script>
           </div>
           <div class="section__list-item">
             <div class="name">SOC Analyst</div>

@@ -4,14 +4,14 @@ import azure.functions as func
 from azure.cosmos import CosmosClient
 
 # Initialize CosmosClient with account endpoint and account key
-endpoint = "YOUR ENDPOINT"
-key = "YOUR KEY"
+endpoint = "https://cosmosdbazureresume.documents.azure.com:443/"
+key = "dlLC6mtUVegAeJK3RSbGorv28VBzhEdeZFhJyZOBQN9I8LeRoS60IYBXsudOM7e0YRPCDZAXI3guACDbL24ilw=="
 client = CosmosClient(endpoint, credential=key)
 
 # Specify the name of your database and container
-database_name = "DATABASE NAME"
-container_name = "CONTAINER NAME"
-item_id = "ID"
+database_name = "AzureResume"
+container_name = "Counter"
+item_id = "1"
 
 database = client.get_database_client(database_name)
 container = database.get_container_client(container_name)
