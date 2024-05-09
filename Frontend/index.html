@@ -48,17 +48,17 @@
             <div class="tagline">Azure-based full-stack serverless coding project</div>
             <div class="text">
                 <ul>
-                <li>HTML, CSS, JavaScript hosted on Blob Storage</li>
-                <li>CosmosDB, Azure Functions, and API Gateway for visitor counter</li>
-                <li><a href="https://github.com/aeversme/resumestatic" target="_blank">GitHub repository</a> with Actions for CI/CD automation using the SAM CLI tool</li>
+                <li>HTML, CSS, JavaScript hosted on Blob Storage.</li>
+                <li>CosmosDB, Azure Functions, and API Gateway for visitor counter.</li>
+                <li>GitHub repository with Actions for CI/CD automation.</li>
                 </ul>
             </div>
             <div class="text">This is the dynamic page hit counter: you are visitor number <span id='counter'></span>!</div>
             <script>
               window.addEventListener('DOMContentLoaded', (event) => {
 					    getVisitCount();
-				    });
-              const functionApi = ('http://localhost:7071/api/GetResumeCounter');
+				     });
+              const functionApi = ('https://resumecounterfunction.azurewebsites.net/api/GetResumeCounter?code=yhEPjzGQ02r97XOQWkq_Jl25fWhZvWJZiy8S_UBl_HZYAzFuc6X8MQ%3D%3D');
 
               const getVisitCount = () =>{
               let count = 30;
@@ -72,7 +72,7 @@
                 console.log(error);
               });
               return count;
-            }
+              }
             </script>
           </div>
           <div class="section__list-item">
