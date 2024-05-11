@@ -1,4 +1,5 @@
-name: deploy_api
+name: Deploy baclkend files
+
 
 on:
   workflow_dispatch:
@@ -8,32 +9,38 @@ on:
       - 'Backend/api/**'
 
 env:
-  AZURE_FUNCTIONAPP_NAME: 'resumecounterfunction'   # set this to your function app name on Azure
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'Backend'       # set this to the path to your function app project, defaults to the repository root
+  COSMOS_ENDPOINT: ${{ secrets.ENDPOINT }} 
+  COSMOS_KEY: ${{ secrets.KEY }}
+  AZURE_FUNCTIONAPP_NAME: 'resumecounterfunction'
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'Backend'
+  PYTHON_VERSION: '3.11.9'
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest # For Linux, use ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v3
 
-    # If you want to use Azure RBAC instead of Publish Profile, then uncomment the task below
-    # - name: 'Login via Azure CLI'
-    #   uses: azure/login@v1
-    #   with:
-    #     creds: ${{ secrets.AZURE_RBAC_CREDENTIALS }} # set up AZURE_RBAC_CREDENTIALS secrets in your repository
-
-    - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
-      uses: actions/setup-dotnet@v3
+    - name: 'Login to Azure via CLI'
+      uses: azure/login@v1
       with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: 'Resolve Project Dependencies Using Dotnet'
-      shell: bash # For Linux, use bash
+    - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: 'Resolve Project Dependencies Using Pip'
+      shell: bash
       run: |
-        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-        dotnet build --configuration Release --output ./output
+        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/backend'
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+        pip install azure-functions
+        pip install azure-cosmos
+        pip install pytest
         popd
 
     - name: 'Run Azure Functions Action'
@@ -41,5 +48,7 @@ jobs:
       id: fa
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
-        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }} # Remove publish-profile to use Azure RBAC
+        package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/api/output'
+        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+        scm-do-build-during-deployment: true
+        enable-oryx-build: true
